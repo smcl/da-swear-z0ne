@@ -18,6 +18,7 @@ module SwearyParser =
         Hash:string
         Message: string
         Repository: Repository
+        Date: DateTime
     }
 
     type BitbucketCommits =
@@ -25,7 +26,7 @@ module SwearyParser =
 
     // TODO: find a better collection of these
     let swearWords = [
-            "shit"; "fuck"; "damn"; "error"
+            "shit"; "fuck"; "damn"; "dang"
         ] 
 
     let PopulateHashCache commitHashes =

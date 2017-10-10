@@ -6,21 +6,6 @@ open dsz
 
 let urlPattern = "https://api.bitbucket.org/2.0/repositories/{0}/{1}/commits"
 
-let escape (s:string) = s.Replace("\"", "\\\"")
-
-let createRequestBody (commit:SwearyParser.Commit) = 
-    let messageFormat = "{{\"username\": \"da swear z0ne\", \"icon_emoji\": \":skull:\", \"text\": \"In *{0}*:\n\t{1}\"}}"
-    let body = NameValueCollection()
-    body.["payload"] <- String.Format(messageFormat, commit.Repository.Name, escape (commit.Message.Trim()))
-    body
-
-let stdoutPrinter (commit:SwearyParser.Commit) =
-    printfn "%s %s" commit.Hash (commit.Message.Trim())
-
-let slackPrinter (slackHookUri:string) (commit:SwearyParser.Commit) =
-    let wc = new WebClient()
-    wc.UploadValues(slackHookUri, "POST", (createRequestBody commit)) |> ignore
-
 let swearyCommitPrinter p (commits:SwearyParser.Commit list) =
     let swearyHashes = commits |> List.map (fun c -> c.Hash) |> Array.ofList
     for commit in commits do p commit
@@ -34,7 +19,7 @@ let main argv =
         args.repositories
         |> List.collect (fun repo -> dsz.SwearyParser.InspectRepository args.init (String.Format(urlPattern, args.organization, repo)) args.username args.password)
 
-    let action = if args.print then stdoutPrinter else slackPrinter args.hook
+    let action = if args.print then Printer.StdOut else Printer.Slack args.hook
 
     swearyCommitPrinter action swearyCommits
     0 // return an integer exit code
