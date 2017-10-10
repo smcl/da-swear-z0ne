@@ -9,7 +9,7 @@ let urlPattern = "https://api.bitbucket.org/2.0/repositories/{0}/{1}/commits"
 let escape (s:string) = s.Replace("\"", "\\\"")
 
 let createRequestBody (commit:SwearyParser.Commit) = 
-    let messageFormat = "{{\"username\": \"da swear z0ne\", \"text\": \"In {0}: {1}\"}}"
+    let messageFormat = "{{\"username\": \"da swear z0ne\", \"icon_emoji\": \":skull:\", \"text\": \"In *{0}*:\n\t{1}\"}}"
     let body = NameValueCollection()
     body.["payload"] <- String.Format(messageFormat, commit.Repository.Name, escape (commit.Message.Trim()))
     body
