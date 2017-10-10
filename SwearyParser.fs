@@ -10,9 +10,14 @@ open Newtonsoft.Json
 module SwearyParser =
     let hashCacheFilename = ".dsz-hashes"
 
+    type Repository = {
+        Name: string
+    }
+
     type Commit = {
         Hash:string
         Message: string
+        Repository: Repository
     }
 
     type BitbucketCommits =
@@ -20,7 +25,7 @@ module SwearyParser =
 
     // TODO: find a better collection of these
     let swearWords = [
-            "shit"; "fuck"; "damn";
+            "shit"; "fuck"; "damn"; "error"
         ] 
 
     let PopulateHashCache commitHashes =

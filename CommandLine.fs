@@ -8,6 +8,7 @@ module CommandLine =
         password: string;
         organization: string;
         repositories: string list;
+        hook: string;
         }
 
     let defaultOptions = {
@@ -16,7 +17,8 @@ module CommandLine =
         username = "";
         password = "";
         organization = "";
-        repositories = []
+        repositories = [];
+        hook = "";
         }
 
     let rec parseCommandLine' args options = 
@@ -40,6 +42,9 @@ module CommandLine =
             parseCommandLine' xs newOpts
         | "--repos"::repos::xs -> 
             let newOpts = { options with repositories=repos.Split [|','|] |> List.ofArray }
+            parseCommandLine' xs newOpts
+        | "--hook"::hook::xs -> 
+            let newOpts = { options with hook=hook }
             parseCommandLine' xs newOpts
 
     let ParseCommandLine args = 
