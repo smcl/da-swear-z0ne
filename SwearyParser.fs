@@ -25,10 +25,6 @@ module SwearyParser =
     type BitbucketCommits =
         { PageLen:int; Values:Commit []}
 
-    let swearWords = 
-        File.ReadAllLines("swears/en")
-        |> List.ofArray
-
     let PopulateHashCache commitHashes =
         let commitHashesArray = commitHashes |> Array.ofList
         File.WriteAllLines(hashCacheFilename, commitHashesArray)
@@ -47,7 +43,8 @@ module SwearyParser =
 
     let containsAnySwear commit =
         let commitMessage = commit.Message.ToLower()
-        swearWords 
+        File.ReadAllLines("swears/en")
+        |> List.ofArray 
         |> List.map (containsSpecificSwear commit)
         |> List.fold (||) false
 

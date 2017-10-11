@@ -9,6 +9,7 @@ module CommandLine =
         organization: string;
         repositories: string list;
         hook: string;
+        channel: string;
         }
 
     let defaultOptions = {
@@ -19,6 +20,7 @@ module CommandLine =
         organization = "";
         repositories = [];
         hook = "";
+        channel = "";
         }
 
     let rec parseCommandLine' args options = 
@@ -45,6 +47,9 @@ module CommandLine =
             parseCommandLine' xs newOpts
         | "--hook"::hook::xs -> 
             let newOpts = { options with hook=hook }
+            parseCommandLine' xs newOpts
+        | "--channel"::channel::xs -> 
+            let newOpts = { options with channel=channel }
             parseCommandLine' xs newOpts
 
     let ParseCommandLine args = 
