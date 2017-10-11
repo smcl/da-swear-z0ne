@@ -7,9 +7,6 @@ open System.Net
 open System.Text
 
 module Printer =
-
-    let urlPattern = "https://api.bitbucket.org/2.0/repositories/{0}/{1}/commits"
-
     let escape (s:string) = s.Replace("\"", "\\\"")
 
     let createRequestBody (commit:SwearyParser.Commit) = 
@@ -29,4 +26,8 @@ module Printer =
         let swearyHashes = commits |> List.map (fun c -> c.Hash) |> Array.ofList
         for commit in commits do p commit
         File.AppendAllLines(".dsz-hashes", swearyHashes)
-        ()
+        0
+        
+    let Print (print:bool) (slackHookUri:string) = 
+        let printMethod = if print then StdOut else Slack slackHookUri
+        swearyCommitPrinter printMethod

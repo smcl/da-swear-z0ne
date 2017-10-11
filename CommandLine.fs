@@ -2,7 +2,7 @@ namespace dsz
 
 module CommandLine =
     type CommandLineOptions = {
-        print: bool;
+        printOnly: bool;
         init: bool;
         username: string;
         password: string;
@@ -12,7 +12,7 @@ module CommandLine =
         }
 
     let defaultOptions = {
-        print = false;
+        printOnly = false;
         init = false;
         username = "";
         password = "";
@@ -29,7 +29,7 @@ module CommandLine =
             let newOpts = { options with init=true}
             parseCommandLine' xs newOpts 
         | "--print"::xs ->
-            let newOpts = { options with print=true}
+            let newOpts = { options with printOnly=true}
             parseCommandLine' xs newOpts 
         | "--user"::user::xs -> 
             let newOpts = { options with username=user }
