@@ -13,4 +13,4 @@ let main argv =
         args.repositories
         |> List.collect (fun repo -> dsz.SwearyParser.InspectRepository args.init (String.Format(urlPattern, args.organization, repo)) args.username args.password)
 
-    Printer.Print args.print args.hook swearyCommits
+    Printer.Print args.printOnly args.hook swearyCommits

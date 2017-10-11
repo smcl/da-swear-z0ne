@@ -4,6 +4,7 @@ open System
 open System.IO
 open System.Net
 open System.Text
+open System.Text.RegularExpressions
 open Newtonsoft.Json
 
 
@@ -24,10 +25,9 @@ module SwearyParser =
     type BitbucketCommits =
         { PageLen:int; Values:Commit []}
 
-    // TODO: find a better collection of these
-    let swearWords = [
-            "shit"; "fuck"; "damn"; "dang"
-        ] 
+    let swearWords = 
+        File.ReadAllLines("swears/en")
+        |> List.ofArray
 
     let PopulateHashCache commitHashes =
         let commitHashesArray = commitHashes |> Array.ofList
@@ -41,10 +41,14 @@ module SwearyParser =
             File.ReadAllLines(hashCacheFilename)
             |> Set.ofArray
 
-    let containsSwear commit =
+    let containsSpecificSwear commit (swear:string) =
+        let r = Regex(String.Format(@"\W{0}\W", swear))
+        r.IsMatch(commit.Message)
+
+    let containsAnySwear commit =
         let commitMessage = commit.Message.ToLower()
         swearWords 
-        |> List.map (fun s -> commitMessage.IndexOf(s) > 0)
+        |> List.map (containsSpecificSwear commit)
         |> List.fold (||) false
 
     let InspectRepository (init:bool) (repoUrl:string) (user:string) (password:string) =
@@ -63,4 +67,4 @@ module SwearyParser =
             commitInfo.Values
             |> Array.toList        
             |> List.filter (fun c -> not (hashes.Contains(c.Hash)))
-            |> List.filter (fun c -> containsSwear(c))
+            |> List.filter (fun c -> containsAnySwear(c))
