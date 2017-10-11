@@ -6,25 +6,32 @@ open System.IO
 open System.Net
 open System.Text
 open dsz.SwearyParser
+open Newtonsoft.Json
 
 module Printer =
-    let escape (s:string) = s.Replace("\"", "\\\"")
-    // TODO: config a class then serialize using Newtonsoft.Json instead of this hidious string literal
-    let defaultSlackMessage = "{{\"username\": \"da swear z0ne\", \"icon_emoji\": \":skull:\", \"text\": \"In *{0}* @ {1}:\n\t{2}\"}}"
-    let slackMessageWithChannel = "{{\"username\": \"da swear z0ne\", \"icon_emoji\": \":skull:\", \"text\": \"In *{0}* @ {1}:\n\t{2}\", \"channel\": \"{3}\"}}"
+    type SlackMessage = {
+        username: string;
+        icon_emoji: string;
+        text: string;
+        channel: string;
+        }
+
+    let buildMessage (commit:Commit) = 
+        String.Format("In *{0}* @ {1}:\n\t{2}", commit.Repository.Name, commit.Date, commit.Message)
 
     let createRequestBody (slackChannel:string) (commit:Commit) = 
-        let message = 
-            if String.IsNullOrEmpty(slackChannel)
-            then String.Format(defaultSlackMessage, commit.Repository.Name, commit.Date, escape (commit.Message.Trim()))
-            else String.Format(defaultSlackMessage, commit.Repository.Name, commit.Date, escape (commit.Message.Trim()), slackChannel)
-
+        let message = {
+            username = "da swear z0ne";
+            icon_emoji = ":skull:";
+            text = buildMessage commit; 
+            channel = if String.IsNullOrEmpty(slackChannel) then null else slackChannel
+        }
         let body = NameValueCollection()
-        body.["payload"] <- message
-        body
+        body.["payload"] <- JsonConvert.SerializeObject message
+        body        
 
     let StdOut (commit:Commit) =
-        printfn "%s %s" commit.Hash (commit.Message.Trim())
+        printfn "%s" (buildMessage commit)
 
     let Slack (slackHookUri:string) (slackChannel:string) (commit:Commit) =
         let wc = new WebClient()
