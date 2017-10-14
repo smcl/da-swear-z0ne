@@ -4,7 +4,6 @@ open System
 open System.Collections.Specialized
 open System.IO
 open System.Net
-open System.Text
 open dsz.SwearyParser
 open Newtonsoft.Json
 
