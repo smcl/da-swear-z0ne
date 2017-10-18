@@ -5,7 +5,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CommandLine.fs" />
-    <Compile Include="SwearyParser.fs" />
+    <Compile Include="BitbucketReader.fs" />
+    <Compile Include="SwearFilter.fs" />    
     <Compile Include="Printer.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

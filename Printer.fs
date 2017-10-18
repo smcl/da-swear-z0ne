@@ -4,7 +4,7 @@ open System
 open System.Collections.Specialized
 open System.IO
 open System.Net
-open dsz.SwearyParser
+open dsz.BitbucketReader
 open Newtonsoft.Json
 
 module Printer =
@@ -42,6 +42,6 @@ module Printer =
         File.AppendAllLines(".dsz-hashes", swearyHashes)
         0
         
-    let Print (print:bool) (slackHookUri:string) (slackChannel:string) = 
+    let Output (print:bool) (slackHookUri:string) (slackChannel:string) = 
         let printMethod = if print then StdOut else Slack slackHookUri slackChannel
         swearyCommitPrinter printMethod

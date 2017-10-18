@@ -4,13 +4,12 @@ open System.Net
 open System.IO
 open dsz
 
-let urlPattern = "https://api.bitbucket.org/2.0/repositories/{0}/{1}/commits"
-
 [<EntryPoint>]
 let main argv =
     let args = dsz.CommandLine.ParseCommandLine (Array.toList argv)
-    let swearyCommits = 
+    let commits = 
         args.repositories
-        |> List.collect (fun repo -> SwearyParser.InspectRepository args.init (String.Format(urlPattern, args.organization, repo)) args.username args.password)
+        |> List.collect (fun repo -> BitbucketReader.Get args.organization repo args.username args.password)
+        |> SwearFilter.Apply args.init
 
-    Printer.Print args.printOnly args.hook args.channel swearyCommits
+    Printer.Output args.printOnly args.hook args.channel commits
