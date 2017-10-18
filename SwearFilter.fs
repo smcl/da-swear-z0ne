@@ -34,6 +34,6 @@ module SwearFilter =
     let Apply (init:bool) (commits:Commit list) = 
         let seenHashes = getHashes init
         in commits
-            |> List.filter (fun c -> not (seenHashes.Contains(c.Hash)))
-            |> List.filter containsAnySwear
-            |> updateHashesFile
+        |> List.filter (fun c -> not (seenHashes.Contains(c.Hash)))
+        |> List.filter containsAnySwear
+        |> updateHashesFile

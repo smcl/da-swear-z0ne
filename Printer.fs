@@ -36,12 +36,6 @@ module Printer =
         let wc = new WebClient()
         wc.UploadValues(slackHookUri, "POST", (createRequestBody slackChannel commit)) |> ignore
 
-    let swearyCommitPrinter p (commits:Commit list) =
-        let swearyHashes = commits |> List.map (fun c -> c.Hash) |> Array.ofList
-        for commit in commits do p commit
-        File.AppendAllLines(".dsz-hashes", swearyHashes)
-        0
-        
-    let Output (print:bool) (slackHookUri:string) (slackChannel:string) = 
+    let Output (print:bool) (slackHookUri:string) (slackChannel:string) (commits:Commit list) = 
         let printMethod = if print then StdOut else Slack slackHookUri slackChannel
-        swearyCommitPrinter printMethod
+        for commit in commits do printMethod commit
