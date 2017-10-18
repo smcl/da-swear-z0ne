@@ -7,7 +7,7 @@ module CommandLine =
         username: string;
         password: string;
         organization: string;
-        repositories: string list;
+        repositories: string [];
         hook: string;
         channel: string;
         }
@@ -18,7 +18,7 @@ module CommandLine =
         username = "";
         password = "";
         organization = "";
-        repositories = [];
+        repositories = [||];
         hook = "";
         channel = "";
         }
@@ -43,7 +43,7 @@ module CommandLine =
             let newOpts = { options with organization=org }
             parseCommandLine' xs newOpts
         | "--repos"::repos::xs -> 
-            let newOpts = { options with repositories=repos.Split [|','|] |> List.ofArray }
+            let newOpts = { options with repositories=repos.Split [|','|] }
             parseCommandLine' xs newOpts
         | "--hook"::hook::xs -> 
             let newOpts = { options with hook=hook }

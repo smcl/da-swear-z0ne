@@ -34,5 +34,4 @@ module BitbucketReader =
         let bitbucketResponse = 
             wc.DownloadString(createRepoUrl organisation repo) 
             |> JsonConvert.DeserializeObject<BitbucketCommits>
-        
-        in bitbucketResponse.Values |> List.ofArray
+        in bitbucketResponse.Values

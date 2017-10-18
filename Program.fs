@@ -8,7 +8,7 @@ open dsz
 let main argv =
     let args = dsz.CommandLine.ParseCommandLine (Array.toList argv)
     in args.repositories
-    |> List.collect (fun repo -> BitbucketReader.Get args.organization repo args.username args.password)
+    |> Array.collect (fun repo -> BitbucketReader.Get args.organization repo args.username args.password)
     |> SwearFilter.Apply args.init
     |> Printer.Output args.printOnly args.hook args.channel     
     0

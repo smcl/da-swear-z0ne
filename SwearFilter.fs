@@ -26,14 +26,14 @@ module SwearFilter =
             File.ReadAllLines(hashCacheFilename)
             |> Set.ofArray
 
-    let updateHashesFile (commits:Commit list) = 
-        let hashes = commits |> List.map (fun c -> c.Hash) |> Array.ofList
+    let updateHashesFile commits = 
+        let hashes = commits |> Array.map (fun c -> c.Hash)
         File.AppendAllLines(hashCacheFilename, hashes)
         commits
 
-    let Apply (init:bool) (commits:Commit list) = 
+    let Apply (init:bool) (commits:Commit []) = 
         let seenHashes = getHashes init
         in commits
-        |> List.filter (fun c -> not (seenHashes.Contains(c.Hash)))
-        |> List.filter containsAnySwear
+        |> Array.filter (fun c -> not (seenHashes.Contains(c.Hash)))
+        |> Array.filter containsAnySwear
         |> updateHashesFile

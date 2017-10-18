@@ -36,6 +36,6 @@ module Printer =
         let wc = new WebClient()
         wc.UploadValues(slackHookUri, "POST", (createRequestBody slackChannel commit)) |> ignore
 
-    let Output (print:bool) (slackHookUri:string) (slackChannel:string) (commits:Commit list) = 
+    let Output (print:bool) (slackHookUri:string) (slackChannel:string) (commits:Commit []) = 
         let printMethod = if print then StdOut else Slack slackHookUri slackChannel
         for commit in commits do printMethod commit
