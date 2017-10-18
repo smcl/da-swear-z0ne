@@ -19,7 +19,6 @@ module SwearFilter =
         |> List.map (containsSpecificSwear commit)
         |> List.fold (||) false
         
-    // TODO: needs to be cached instead of read once per commit!
     let getHashes init =
         if init || not (File.Exists(hashCacheFilename)) then 
             set []
@@ -32,11 +31,9 @@ module SwearFilter =
         File.AppendAllLines(hashCacheFilename, hashes)
         commits
 
-    let haventSeenAlready (init:bool) (commit:Commit) =
-        (getHashes init).Contains(commit.Hash)
-
     let Apply (init:bool) (commits:Commit list) = 
-        commits
-        |> List.filter (fun c -> not (haventSeenAlready init c))
-        |> List.filter containsAnySwear
-        |> updateHashesFile
+        let seenHashes = getHashes init
+        in commits
+            |> List.filter (fun c -> not (seenHashes.Contains(c.Hash)))
+            |> List.filter containsAnySwear
+            |> updateHashesFile
