@@ -1,9 +1,9 @@
-namespace dsz
+namespace DaSwearZone
 
 open System
 open System.IO
 open System.Text.RegularExpressions
-open dsz.BitbucketReader
+open DaSwearZone.BitbucketReader
 
 module SwearFilter = 
     let hashCacheFilename = ".dsz-hashes"
@@ -13,7 +13,6 @@ module SwearFilter =
         r.IsMatch(commit.Message)
 
     let containsAnySwear commit =
-        let commitMessage = commit.Message.ToLower()
         File.ReadAllLines("swears/en")
         |> List.ofArray 
         |> List.map (containsSpecificSwear commit)
