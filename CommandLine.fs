@@ -1,4 +1,4 @@
-namespace dsz
+namespace DaSwearZone
 
 module CommandLine =
     type CommandLineOptions = {

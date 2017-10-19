@@ -1,10 +1,9 @@
-namespace dsz
+namespace DaSwearZone
 
 open System
 open System.Collections.Specialized
-open System.IO
 open System.Net
-open dsz.BitbucketReader
+open DaSwearZone.BitbucketReader
 open Newtonsoft.Json
 
 module Printer =
