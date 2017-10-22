@@ -12,11 +12,10 @@ module SwearFilter =
         let r = Regex(String.Format(@"\W{0}\W", swear))
         r.IsMatch(commit.Message)
 
-    let containsAnySwear commit =
-        File.ReadAllLines("swears/en")
-        |> List.ofArray 
-        |> List.map (containsSpecificSwear commit)
-        |> List.fold (||) false
+    let containsAnySwear swearWords commit =
+        swearWords
+        |> Array.map (containsSpecificSwear commit)
+        |> Array.fold (||) false
         
     let getHashes init =
         if init || not (File.Exists(hashCacheFilename)) then 
@@ -30,9 +29,10 @@ module SwearFilter =
         File.AppendAllLines(hashCacheFilename, hashes)
         commits
 
-    let Apply (init:bool) (commits:Commit []) = 
+    let Apply (init:bool) (commits:Commit []) =
+        let swearWords = File.ReadAllLines("swears/en")
         let seenHashes = getHashes init
         in commits
         |> Array.filter (fun c -> not (seenHashes.Contains(c.Hash)))
-        |> Array.filter containsAnySwear
+        |> Array.filter (containsAnySwear swearWords)
         |> updateHashesFile
